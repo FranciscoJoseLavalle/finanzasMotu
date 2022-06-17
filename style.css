@@ -2,8 +2,61 @@
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+    text-decoration: none;
 }
 
 .header {
-    background: red;
+    background-image: url(https://img-16.stickers.cloud/packs/f395d529-5ce3-4122-99fb-b04f321a0d7f/webp/1938ed15-fd76-4421-9d39-a1b7f72a078a.webp);
+    height: 15rem;
+    background-position: center center;
+}
+
+.header__bg-color {
+    background: #0008;
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.header__title,
+.header__button {
+    font-family: sans-serif;
+    text-transform: uppercase;
+    color: #fff;
+}
+
+.header__button {
+    padding: .5rem;
+    border-radius: .2rem;
+    border: 2px solid #fff;
+    font-weight: 700;
+    background: none;
+    transition: all .3s;
+    display: none;
+}
+
+.header__button:hover {
+    color: #bbbbbb;
+    border-color: #bbbbbb;
+}
+
+/* Header navbar */
+.header__navbar {
+    width: 100%;
+}
+
+.header__ul {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.header__nav__item {
+    color: #fff;
+    text-transform: uppercase;
 }
