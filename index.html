@@ -1,12 +1,41 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
-    
+
+    <main class="main">
+        <form class="main__form">
+            <div class="main__form-inputCont main__form-cont">
+                <label for="monto">Ingrese un monto</label>
+                <input type="number" placeholder="Monto" class="inputMonto">
+            </div>
+            <div class="main__form-selectCont main__form-cont">
+                <select class="main__form-select">
+                    <option value="nada" class="formOption">Ingresa un tipo</option>
+                    <option value="ingreso" class="formOption">Ingreso</option>
+                    <option value="egreso" class="formOption">Egreso</option>
+                </select>
+            </div>
+            <button class="main__form-button">Agregar</button>
+        </form>
+        <section class="main__historial">
+            <h3>Historial</h3>
+            <select class="main__historial-select">
+                <option value="nada">Ver por</option>
+                <option value="ingresos">Ingresos</option>
+                <option value="egresos">Egresos</option>
+            </select>
+            <div class="main__historial-cont"></div>
+        </section>
+    </main>
+    <script src="app.js"></script>
 </body>
+
 </html>
