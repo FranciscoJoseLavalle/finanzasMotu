@@ -3,6 +3,13 @@ const btnAgregar = document.querySelector('.main__form-button');
 const montoInput = document.querySelector('.inputMonto');
 const historialCont = document.querySelector('.main__historial-cont');
 const formOption = document.querySelectorAll('.formOption');
+const select = document.querySelector('.main__form-select');
+const form = document.querySelector('.main__form');
+const montoTotalCont = document.querySelector('.montoTotal')
+const selectFiltro = document.querySelector('.main__historial-select')
+const btnModal = document.querySelector('.openModal');
+const btnModalClose = document.querySelector('.closeModal');
+const main = document.querySelector('.main');
 
 // Clase de montos
 class Montos {
@@ -14,24 +21,54 @@ class Montos {
 
 // Array para guardar los montos
 let arrMontos = [];
+let ingresos = [];
+let egresos = [];
 
 // Función para tomar los datos
 btnAgregar.addEventListener('click', (e) => {
     e.preventDefault();
     let monto = montoInput.value;
 
-    let montoNuevo = new Montos(monto, "ingreso")
+    if (monto !== '') {
+        if (select.value == 'ingreso') {
+            let tipo = "Ingreso"
+            crearObjeto(monto, tipo);
+        } else if (select.value == 'egreso') {
+            let tipo = "Egreso"
+            crearObjeto(monto, tipo);
+        }
+    }
+    form.reset();
+})
+
+//Evento de filtrado para el select
+selectFiltro.addEventListener('change', filtrar)
+
+// Crear el objeto
+function crearObjeto(monto, tipo) {
+    let montoNuevo = new Montos(monto, tipo)
     arrMontos.push(montoNuevo);
-    console.log(arrMontos);
-    mostrarHistorial();
+    mostrarHistorial(arrMontos);
+    calcularMonto();
+}
+
+// Abrir el modal
+btnModal.addEventListener('click', () => {
+    main.classList.toggle('display');
+    btnModal.classList.toggle('btnAnimate');
+})
+// Cerrar el modal
+btnModalClose.addEventListener('click', () => {
+    main.classList.toggle('display');
+    btnModal.classList.toggle('btnAnimate');
 })
 
 // Función para mostrar el historial
-function mostrarHistorial() {
-    
+function mostrarHistorial(array) {
+
     historialCont.textContent = '';
 
-    arrMontos.forEach(elemento => {
+    array.forEach(elemento => {
         const div = document.createElement('div');
         const texto = document.createElement('p');
 
@@ -40,4 +77,33 @@ function mostrarHistorial() {
         div.append(texto);
         historialCont.append(div);
     })
+}
+
+// Mostrar el monto total
+function calcularMonto() {
+    ingresos = arrMontos.filter(elemento => elemento.tipo === "Ingreso");
+    egresos = arrMontos.filter(elemento => elemento.tipo === "Egreso");
+
+    let ingresosTotales = 0;
+    let egresosTotales = 0;
+    for (let i = 0; i < ingresos.length; i++) {
+        ingresosTotales += parseFloat(ingresos[i].monto);
+    }
+    for (let i = 0; i < egresos.length; i++) {
+        egresosTotales += parseFloat(egresos[i].monto);
+    }
+    
+    let montoTotal = ingresosTotales - egresosTotales;
+    montoTotalCont.textContent = `Monto final: $${montoTotal}`;
+}
+
+// Filtrar ingresos y egresos
+function filtrar() {
+    if (selectFiltro.value === "ingresos") {
+        mostrarHistorial(ingresos);
+    } else if (selectFiltro.value === "egresos"){
+        mostrarHistorial(egresos);
+    } else if (selectFiltro.value === "nada") {
+        mostrarHistorial(arrMontos);
+    }
 }

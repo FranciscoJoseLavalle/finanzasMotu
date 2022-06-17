@@ -3,12 +3,15 @@
     margin: 0;
     box-sizing: border-box;
     text-decoration: none;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .header {
     background-image: url(https://img-16.stickers.cloud/packs/f395d529-5ce3-4122-99fb-b04f321a0d7f/webp/1938ed15-fd76-4421-9d39-a1b7f72a078a.webp);
-    height: 15rem;
+    height: 20rem;
     background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .header__bg-color {
@@ -25,7 +28,6 @@
 
 .header__title,
 .header__button {
-    font-family: sans-serif;
     text-transform: uppercase;
     color: #fff;
 }
