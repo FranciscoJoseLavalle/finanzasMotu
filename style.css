@@ -7,8 +7,10 @@
 
 .header {
     background-image: url(https://img-16.stickers.cloud/packs/f395d529-5ce3-4122-99fb-b04f321a0d7f/webp/1938ed15-fd76-4421-9d39-a1b7f72a078a.webp);
-    height: 15rem;
     background-position: center center;
+    height: 15rem;    
+    background-repeat: no-repeat;     
+    background-size: cover;
 }
 
 .header__bg-color {
@@ -28,6 +30,7 @@
     font-family: sans-serif;
     text-transform: uppercase;
     color: #fff;
+    text-align: center;
 }
 
 .header__button {
@@ -48,10 +51,22 @@
 /* Header navbar */
 .header__navbar {
     width: 100%;
+    background: #2c3e50;
+    position: fixed;
+    left: 0;
+    top: 15rem;
+    width: 100%;
+
+    height: calc(100% - 15rem);
+    left: 100%;
+    transition: all .3s;
 }
 
 .header__ul {
+    margin-top: 1rem;
     display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
     gap: 1rem;
 }
@@ -59,4 +74,14 @@
 .header__nav__item {
     color: #fff;
     text-transform: uppercase;
+}
+
+.fa-solid {
+    color: #fff;
+    cursor: pointer;
+    font-size: 1.5rem;
+}
+
+.nav-menu_visible {
+    left: 0;
 }
