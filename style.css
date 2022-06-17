@@ -47,6 +47,9 @@
 }
 
 /* Header navbar */
+.toggle-button {
+    display: none;
+}
 @media (max-width: 768px) {
     .header__navbar {
         width: 100%;
@@ -101,9 +104,6 @@
     background-color: #0008;
 }
 
-.toggle-button {
-    display: none;
-}
 
 .nav-menu_visible {
     left: 0;

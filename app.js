@@ -10,6 +10,7 @@ const selectFiltro = document.querySelector('.main__historial-select')
 const btnModal = document.querySelector('.openModal');
 const btnModalClose = document.querySelector('.closeModal');
 const main = document.querySelector('.main');
+const body = document.querySelector('body');
 
 // Clase de montos
 class Montos {
@@ -56,11 +57,13 @@ function crearObjeto(monto, tipo) {
 btnModal.addEventListener('click', () => {
     main.classList.toggle('display');
     btnModal.classList.toggle('btnAnimate');
+    body.classList.toggle('scrollLock');
 })
 // Cerrar el modal
 btnModalClose.addEventListener('click', () => {
     main.classList.toggle('display');
     btnModal.classList.toggle('btnAnimate');
+    body.classList.toggle('scrollLock');
 })
 
 // Función para mostrar el historial
