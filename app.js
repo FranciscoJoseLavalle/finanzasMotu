@@ -17,10 +17,11 @@ const er = /^[A-Za-z0-9]*$/;
 
 // Clase de montos
 class Montos {
-    constructor(monto, tipo, detalle) {
+    constructor(monto, tipo, detalle, fecha) {
         this.monto = monto;
         this.tipo = tipo;
         this.detalle = detalle;
+        this.fecha = fecha;
         this.id = Date.now();
     }
 }
@@ -44,10 +45,10 @@ btnAgregar.addEventListener('click', (e) => {
     if (monto > 0.01 && monto !== '' && detalle !== '' && !(/^\s/.test(detalle)) && select.value !== 'nada') {
         if (select.value === 'Ingreso') {
             let tipo = "Ingreso"
-            crearObjeto(monto, tipo, detalle);
+            crearObjeto(monto, tipo, detalle, fechaActual());
         } else if (select.value === 'Egreso') {
             let tipo = "Egreso"
-            crearObjeto(monto, tipo, detalle);
+            crearObjeto(monto, tipo, detalle, fechaActual());
         }
         form.reset();
     }
@@ -90,12 +91,21 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 // Crear el objeto
-function crearObjeto(monto, tipo, detalle) {
-    let montoNuevo = new Montos(monto, tipo, detalle)
+function crearObjeto(monto, tipo, detalle, fecha) {
+    let montoNuevo = new Montos(monto, tipo, detalle, fecha)
     arrMontos.push(montoNuevo);
     mostrarHistorial(arrMontos);
     calcularMonto();
     localStorage.setItem('montos', JSON.stringify(arrMontos))
+}
+
+// Fecha actual
+function fechaActual() {
+    const dateTime = luxon.DateTime;
+    const actual = dateTime.now();
+    const dia = actual.toLocaleString();
+    const hora = actual.toLocaleString(dateTime.TIME_SIMPLE);
+    return ` ${dia} a las ${hora}hs`;
 }
 
 // Validación de formulario
@@ -133,7 +143,7 @@ function mostrarHistorial(array) {
             div.classList.add('montos');
             imgCont.classList.add('imgCont');
 
-            texto.textContent = `$${parseFloat(elemento.monto).toFixed(2)} - ${elemento.tipo} - ${elemento.detalle}`;
+            texto.textContent = `$${parseFloat(elemento.monto).toFixed(2)} - ${elemento.tipo} - ${elemento.detalle} - ${elemento.fecha}`;
             eliminar.src = './img/borrar.png';
             editar.src = './img/lapiz.png';
     
