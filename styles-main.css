@@ -89,6 +89,7 @@
     font-size: 2.5rem;
     background-color: #78f;
     box-shadow: #444 1px 5px 10px 2px;
+    color: #000;
     transition: transform .2s, background-color .2s;
 }
 .openModal:hover {
@@ -104,6 +105,7 @@
     margin: .2rem;
     height: 1.5rem;
     width: 1.5rem;
+    color: #000;
 }
 .btnAnimate {
     transform: rotate(45deg);
@@ -114,33 +116,4 @@
 }
 .scrollLock{
     overflow: hidden;
-}
-
-
-
-
-.burga {
-    display: flex;
-    flex-direction: column;
-    gap: .3rem;
-    position: relative;
-    height: 2.1rem;
-}
-.burgas {
-    height: .45rem;
-    width: 2.5rem;
-    background-color: #000;
-    transition: transform .3s;
-    border-radius: .2rem;
-}
-.burga0 {
-    position: absolute;
-    top: .8rem;
-    transform: rotate(45deg);
-}
-.burga1 {
-    opacity: 0;
-}
-.burga2 {
-    transform: rotate(-45deg);
 }

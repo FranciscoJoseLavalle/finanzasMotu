@@ -75,38 +75,57 @@ function mostrarHistorial(array) {
         const div = document.createElement('div');
         const texto = document.createElement('p');
 
-        texto.textContent = `$${elemento.monto} - ${elemento.tipo}`;
-        
+        texto.textContent = `$${parseFloat(elemento.monto).toFixed(2)} - ${elemento.tipo}`;
+
         div.append(texto);
         historialCont.append(div);
     })
 }
 
-// Mostrar el monto total
+// Calcular el monto total
 function calcularMonto() {
     ingresos = arrMontos.filter(elemento => elemento.tipo === "Ingreso");
     egresos = arrMontos.filter(elemento => elemento.tipo === "Egreso");
 
+    let ingresosTotales = calcularIngreso();
+    let egresosTotales = calcularEgreso();
+
+    let montoTotal = ingresosTotales - egresosTotales;
+    mostrarMonto(montoTotal);
+}
+
+// Calcular ingreso
+function calcularIngreso() {
     let ingresosTotales = 0;
-    let egresosTotales = 0;
     for (let i = 0; i < ingresos.length; i++) {
         ingresosTotales += parseFloat(ingresos[i].monto);
     }
+    return ingresosTotales;
+}
+// Calcular egreso
+function calcularEgreso() {
+    let egresosTotales = 0;
     for (let i = 0; i < egresos.length; i++) {
         egresosTotales += parseFloat(egresos[i].monto);
     }
-    
-    let montoTotal = ingresosTotales - egresosTotales;
-    montoTotalCont.textContent = `Monto final: $${montoTotal}`;
+    return egresosTotales;
+}
+// Mostrar el monto total
+function mostrarMonto(montoTotal) {
+    montoTotalCont.textContent = `Monto final: $${montoTotal.toFixed(2)}`;
 }
 
 // Filtrar ingresos y egresos
 function filtrar() {
     if (selectFiltro.value === "ingresos") {
         mostrarHistorial(ingresos);
-    } else if (selectFiltro.value === "egresos"){
+        let montoTotal = calcularIngreso();
+        mostrarMonto(montoTotal);
+    } else if (selectFiltro.value === "egresos") {
         mostrarHistorial(egresos);
     } else if (selectFiltro.value === "nada") {
         mostrarHistorial(arrMontos);
+        let montoTotal = calcularEgreso();
+        mostrarMonto(montoTotal);
     }
 }
