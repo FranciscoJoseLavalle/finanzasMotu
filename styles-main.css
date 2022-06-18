@@ -45,6 +45,10 @@
     outline: none;
     border-radius: .3rem;
 }
+.inputWrong {
+    border: .01rem solid #f00;
+    background-color: #f001;
+}
 .main__form-button {
     padding: .5rem;
     background-color: #78f;
@@ -77,6 +81,19 @@
     .historial-cont {
         width: 80%;
     }
+}
+.montos {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+.montos img {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+.imgCont {
+    display: flex;
+    gap: .6rem;
 }
 .openModal {
     position: fixed;

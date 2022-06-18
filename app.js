@@ -12,6 +12,7 @@ const btnModal = document.querySelector('.openModal');
 const btnModalClose = document.querySelector('.closeModal');
 const main = document.querySelector('.main');
 const body = document.querySelector('body');
+const er = /^[A-Za-z0-9]*$/;
 
 // Clase de montos
 class Montos {
@@ -34,16 +35,31 @@ btnAgregar.addEventListener('click', (e) => {
     let monto = montoInput.value;
     let detalle = detalleInput.value;
 
-    if (monto !== '' && detalle !== '') {
-        if (select.value == 'ingreso') {
+    if (monto < 0.01 || monto === '' ) {
+        montoInput.classList.add('inputWrong');
+    } else {
+        montoInput.classList.remove('inputWrong');
+    }
+    if (/^\s/.test(detalle) || detalle === '') {
+        detalleInput.classList.add('inputWrong');
+    } else {
+        detalleInput.classList.remove('inputWrong');
+    }
+    if (select.value === 'nada') {
+        select.classList.add('inputWrong');
+    } else {
+        select.classList.remove('inputWrong');
+    }
+    if (monto > 0.01 && monto !== '' && detalle !== '' && !(/^\s/.test(detalle)) && select.value !== 'nada') {
+        if (select.value === 'ingreso') {
             let tipo = "Ingreso"
             crearObjeto(monto, tipo, detalle);
-        } else if (select.value == 'egreso') {
+        } else if (select.value === 'egreso') {
             let tipo = "Egreso"
             crearObjeto(monto, tipo, detalle);
         }
+        form.reset();
     }
-    form.reset();
 })
 
 //Evento de filtrado para el select
@@ -54,12 +70,20 @@ btnModal.addEventListener('click', () => {
     main.classList.toggle('display');
     btnModal.classList.toggle('btnAnimate');
     body.classList.toggle('scrollLock');
+
+    montoInput.classList.remove('inputWrong');
+    detalleInput.classList.remove('inputWrong');
+    select.classList.remove('inputWrong');
 })
 // Cerrar el modal
 btnModalClose.addEventListener('click', () => {
     main.classList.toggle('display');
     btnModal.classList.toggle('btnAnimate');
     body.classList.toggle('scrollLock');
+
+    montoInput.classList.remove('inputWrong');
+    detalleInput.classList.remove('inputWrong');
+    select.classList.remove('inputWrong');
 })
 
 // Funcion al cargar el documento
@@ -86,17 +110,28 @@ function mostrarHistorial(array) {
         array.forEach(elemento => {
             const div = document.createElement('div');
             const texto = document.createElement('p');
-            const btnEliminar = document.createElement('p');
+            const imgCont = document.createElement('div');
+            const eliminar = document.createElement('img');
+            const editar = document.createElement('img');
     
+            div.classList.add('montos');
+            imgCont.classList.add('imgCont');
+
             texto.textContent = `$${parseFloat(elemento.monto).toFixed(2)} - ${elemento.tipo} - ${elemento.detalle}`;
-            btnEliminar.textContent = 'X'
+            eliminar.src = './img/borrar.png';
+            editar.src = './img/lapiz.png';
     
             div.append(texto);
-            div.append(btnEliminar);
+            imgCont.append(editar);
+            imgCont.append(eliminar);
+            div.append(imgCont);
             historialCont.append(div);
     
-            btnEliminar.onclick = () => {
+            eliminar.onclick = () => {
                 borrarElemento(elemento.id);
+            }
+            editar.onclick = () => {
+                console.log("Editando...")
             }
         })
     } else {

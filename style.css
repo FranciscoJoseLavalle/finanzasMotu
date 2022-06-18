@@ -146,6 +146,11 @@
     position: relative;
     height: 2.1rem;
 }
+@media (max-width: 530px) {
+    .burga {
+        height: 1.6rem;
+    }
+}
 .burgas {
     height: .45rem;
     width: 2.5rem;
