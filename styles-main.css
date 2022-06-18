@@ -49,7 +49,7 @@
     border: .01rem solid #f00;
     background-color: #f001;
 }
-.main__form-button {
+.main__form-button, .main__form-buttonEdit {
     padding: .5rem;
     background-color: #78f;
     border: none;
@@ -58,7 +58,7 @@
     border-radius: .3rem;
     transition: background-color .2s;
 }
-.main__form-button:hover {
+.main__form-button:hover, .main__form-buttonEdit:hover {
     background-color: #89f;
 }
 .main__historial {
@@ -85,6 +85,7 @@
 .montos {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     gap: 1rem;
 }
 .montos img {

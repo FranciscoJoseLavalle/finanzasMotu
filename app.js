@@ -1,5 +1,6 @@
 // Variables
 const btnAgregar = document.querySelector('.main__form-button');
+const btnEdit = document.querySelector('.main__form-buttonEdit');
 const montoInput = document.querySelector('.inputMonto');
 const detalleInput = document.querySelector('.inputDetalle');
 const historialCont = document.querySelector('.main__historial-cont');
@@ -24,6 +25,9 @@ class Montos {
     }
 }
 
+// Elemento a guardar
+let elementoAGuardar;
+
 // Array para guardar los montos
 let arrMontos = JSON.parse(localStorage.getItem('montos')) || [];
 let ingresos = [];
@@ -35,6 +39,67 @@ btnAgregar.addEventListener('click', (e) => {
     let monto = montoInput.value;
     let detalle = detalleInput.value;
 
+    validarFormulario(monto, detalle);
+
+    if (monto > 0.01 && monto !== '' && detalle !== '' && !(/^\s/.test(detalle)) && select.value !== 'nada') {
+        if (select.value === 'Ingreso') {
+            let tipo = "Ingreso"
+            crearObjeto(monto, tipo, detalle);
+        } else if (select.value === 'Egreso') {
+            let tipo = "Egreso"
+            crearObjeto(monto, tipo, detalle);
+        }
+        form.reset();
+    }
+})
+
+
+//Evento de filtrado para el select
+selectFiltro.addEventListener('change', filtrar)
+
+// Abrir el modal
+btnModal.addEventListener('click', () => {
+    modalButtons();
+})
+// Cerrar el modal
+btnModalClose.addEventListener('click', () => {
+    modalButtons();
+})
+
+// Clases del modal
+function modalButtons() {
+    main.classList.toggle('display');
+    btnModal.classList.toggle('btnAnimate');
+    body.classList.toggle('scrollLock');
+    btnAgregar.classList.remove('display');
+    btnEdit.classList.add('display');
+
+    montoInput.classList.remove('inputWrong');
+    detalleInput.classList.remove('inputWrong');
+    select.classList.remove('inputWrong');
+
+    detalleInput.value = '';
+    montoInput.value = '';
+    select.value = 'nada';
+}
+
+// Funcion al cargar el documento
+document.addEventListener('DOMContentLoaded', () => {
+    mostrarHistorial(arrMontos);
+    calcularMonto();
+})
+
+// Crear el objeto
+function crearObjeto(monto, tipo, detalle) {
+    let montoNuevo = new Montos(monto, tipo, detalle)
+    arrMontos.push(montoNuevo);
+    mostrarHistorial(arrMontos);
+    calcularMonto();
+    localStorage.setItem('montos', JSON.stringify(arrMontos))
+}
+
+// Validación de formulario
+function validarFormulario(monto, detalle) {
     if (monto < 0.01 || monto === '' ) {
         montoInput.classList.add('inputWrong');
     } else {
@@ -50,55 +115,6 @@ btnAgregar.addEventListener('click', (e) => {
     } else {
         select.classList.remove('inputWrong');
     }
-    if (monto > 0.01 && monto !== '' && detalle !== '' && !(/^\s/.test(detalle)) && select.value !== 'nada') {
-        if (select.value === 'ingreso') {
-            let tipo = "Ingreso"
-            crearObjeto(monto, tipo, detalle);
-        } else if (select.value === 'egreso') {
-            let tipo = "Egreso"
-            crearObjeto(monto, tipo, detalle);
-        }
-        form.reset();
-    }
-})
-
-//Evento de filtrado para el select
-selectFiltro.addEventListener('change', filtrar)
-
-// Abrir el modal
-btnModal.addEventListener('click', () => {
-    main.classList.toggle('display');
-    btnModal.classList.toggle('btnAnimate');
-    body.classList.toggle('scrollLock');
-
-    montoInput.classList.remove('inputWrong');
-    detalleInput.classList.remove('inputWrong');
-    select.classList.remove('inputWrong');
-})
-// Cerrar el modal
-btnModalClose.addEventListener('click', () => {
-    main.classList.toggle('display');
-    btnModal.classList.toggle('btnAnimate');
-    body.classList.toggle('scrollLock');
-
-    montoInput.classList.remove('inputWrong');
-    detalleInput.classList.remove('inputWrong');
-    select.classList.remove('inputWrong');
-})
-
-// Funcion al cargar el documento
-document.addEventListener('DOMContentLoaded', () => {
-    mostrarHistorial(arrMontos);
-    calcularMonto();
-})
-
-// Crear el objeto
-function crearObjeto(monto, tipo, detalle) {
-    let montoNuevo = new Montos(monto, tipo, detalle)
-    arrMontos.push(montoNuevo);
-    mostrarHistorial(arrMontos);
-    calcularMonto();
-    localStorage.setItem('montos', JSON.stringify(arrMontos))
 }
 
 // Función para mostrar el historial
@@ -131,7 +147,24 @@ function mostrarHistorial(array) {
                 borrarElemento(elemento.id);
             }
             editar.onclick = () => {
-                console.log("Editando...")
+                main.classList.toggle('display');
+                btnModal.classList.toggle('btnAnimate');
+                body.classList.toggle('scrollLock');
+
+                detalleInput.value = elemento.detalle;
+                montoInput.value = elemento.monto;
+                select.value = elemento.tipo;
+
+                btnAgregar.classList.add('display');
+                btnEdit.classList.remove('display');
+                
+                elementoAGuardar = elemento;
+                btnEdit.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    editarElemento(elemento);
+                    modalButtons();
+                    localStorage.setItem('montos', JSON.stringify(arrMontos))
+                })
             }
         })
     } else {
@@ -145,6 +178,38 @@ function borrarElemento(id) {
     localStorage.setItem('montos', JSON.stringify(arrMontos))
     mostrarHistorial(arrMontos);
     calcularMonto();
+}
+
+// Editar elemento
+function editarElemento(elemento) {
+    let monto = montoInput.value;
+    let detalle = detalleInput.value;
+
+
+    validarFormulario(monto, detalle);
+    if (monto > 0.01 && monto !== '' && detalle !== '' && !(/^\s/.test(detalle)) && select.value !== 'nada') {
+        if (select.value == 'Ingreso') {
+            let tipo = "Ingreso"
+            agregarEdicionElemento(elemento, tipo, monto, detalle);
+        } else if (select.value == 'Egreso') {
+            let tipo = "Egreso"
+            agregarEdicionElemento(elemento, tipo, monto, detalle);
+        }
+        form.reset();
+    }
+}
+
+// Agregar la edición del elemento
+function agregarEdicionElemento(elemento, tipo, monto, detalle) {
+    arrMontos.forEach(elementos => {
+        if (elementos.id === elemento.id) {
+            elementos.monto = monto;
+            elementos.detalle = detalle;
+            elementos.tipo = tipo;
+            mostrarHistorial(arrMontos);
+            calcularMonto();
+        }
+    })
 }
 
 // Calcular el monto total
