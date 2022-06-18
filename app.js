@@ -1,6 +1,7 @@
 // Variables
 const btnAgregar = document.querySelector('.main__form-button');
 const montoInput = document.querySelector('.inputMonto');
+const detalleInput = document.querySelector('.inputDetalle');
 const historialCont = document.querySelector('.main__historial-cont');
 const formOption = document.querySelectorAll('.formOption');
 const select = document.querySelector('.main__form-select');
@@ -14,14 +15,16 @@ const body = document.querySelector('body');
 
 // Clase de montos
 class Montos {
-    constructor(monto, tipo) {
+    constructor(monto, tipo, detalle) {
         this.monto = monto;
         this.tipo = tipo;
+        this.detalle = detalle;
+        this.id = Date.now();
     }
 }
 
 // Array para guardar los montos
-let arrMontos = [];
+let arrMontos = JSON.parse(localStorage.getItem('montos')) || [];
 let ingresos = [];
 let egresos = [];
 
@@ -29,14 +32,15 @@ let egresos = [];
 btnAgregar.addEventListener('click', (e) => {
     e.preventDefault();
     let monto = montoInput.value;
+    let detalle = detalleInput.value;
 
-    if (monto !== '') {
+    if (monto !== '' && detalle !== '') {
         if (select.value == 'ingreso') {
             let tipo = "Ingreso"
-            crearObjeto(monto, tipo);
+            crearObjeto(monto, tipo, detalle);
         } else if (select.value == 'egreso') {
             let tipo = "Egreso"
-            crearObjeto(monto, tipo);
+            crearObjeto(monto, tipo, detalle);
         }
     }
     form.reset();
@@ -44,14 +48,6 @@ btnAgregar.addEventListener('click', (e) => {
 
 //Evento de filtrado para el select
 selectFiltro.addEventListener('change', filtrar)
-
-// Crear el objeto
-function crearObjeto(monto, tipo) {
-    let montoNuevo = new Montos(monto, tipo)
-    arrMontos.push(montoNuevo);
-    mostrarHistorial(arrMontos);
-    calcularMonto();
-}
 
 // Abrir el modal
 btnModal.addEventListener('click', () => {
@@ -66,20 +62,54 @@ btnModalClose.addEventListener('click', () => {
     body.classList.toggle('scrollLock');
 })
 
+// Funcion al cargar el documento
+document.addEventListener('DOMContentLoaded', () => {
+    mostrarHistorial(arrMontos);
+    calcularMonto();
+})
+
+// Crear el objeto
+function crearObjeto(monto, tipo, detalle) {
+    let montoNuevo = new Montos(monto, tipo, detalle)
+    arrMontos.push(montoNuevo);
+    mostrarHistorial(arrMontos);
+    calcularMonto();
+    localStorage.setItem('montos', JSON.stringify(arrMontos))
+}
+
 // Función para mostrar el historial
 function mostrarHistorial(array) {
 
     historialCont.textContent = '';
 
-    array.forEach(elemento => {
-        const div = document.createElement('div');
-        const texto = document.createElement('p');
+    if (array.length !== 0) {
+        array.forEach(elemento => {
+            const div = document.createElement('div');
+            const texto = document.createElement('p');
+            const btnEliminar = document.createElement('p');
+    
+            texto.textContent = `$${parseFloat(elemento.monto).toFixed(2)} - ${elemento.tipo} - ${elemento.detalle}`;
+            btnEliminar.textContent = 'X'
+    
+            div.append(texto);
+            div.append(btnEliminar);
+            historialCont.append(div);
+    
+            btnEliminar.onclick = () => {
+                borrarElemento(elemento.id);
+            }
+        })
+    } else {
+        historialCont.textContent = 'No agregaste nada aún...';
+    }
+}
 
-        texto.textContent = `$${parseFloat(elemento.monto).toFixed(2)} - ${elemento.tipo}`;
-
-        div.append(texto);
-        historialCont.append(div);
-    })
+// Función para borrar elementos
+function borrarElemento(id) {
+    arrMontos = arrMontos.filter(element => element.id !== id)
+    localStorage.setItem('montos', JSON.stringify(arrMontos))
+    mostrarHistorial(arrMontos);
+    calcularMonto();
 }
 
 // Calcular el monto total
@@ -123,9 +153,10 @@ function filtrar() {
         mostrarMonto(montoTotal);
     } else if (selectFiltro.value === "egresos") {
         mostrarHistorial(egresos);
-    } else if (selectFiltro.value === "nada") {
-        mostrarHistorial(arrMontos);
         let montoTotal = calcularEgreso();
         mostrarMonto(montoTotal);
+    } else if (selectFiltro.value === "nada") {
+        mostrarHistorial(arrMontos);
+        calcularMonto();
     }
 }
